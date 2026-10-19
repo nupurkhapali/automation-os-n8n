@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group Command Center</title>
+<meta name="description" content="Live dashboard for a three-business group, fed by n8n automations. Synthetic demo data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #efeee9; --surface: #fcfcfb; --surface-2: #f4f3ef; --line: rgba(11,11,11,.10);
+  --text: #0b0b0b; --text-2: #52514e; --muted: #6b6a63; --grid: rgba(11,11,11,.08);
+  --c-realty: #2a78d6; --c-store: #eb6834; --c-agency: #1baf7a; --c-neutral: #8d8c85;
+  --good: #0ca30c; --critical: #d03b3b; --warn: #b87800;
+  --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Hanken Grotesk', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0e0e0d; --surface: #1a1a19; --surface-2: #232321; --line: rgba(240,239,236,.11);
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: rgba(240,239,236,.09);
+    --c-realty: #3987e5; --c-store: #d95926; --c-agency: #199e70; --c-neutral: #7d7c75;
+    --critical: #e66767; --warn: #fab219;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0e0e0d; --surface: #1a1a19; --surface-2: #232321; --line: rgba(240,239,236,.11);
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: rgba(240,239,236,.09);
+  --c-realty: #3987e5; --c-store: #d95926; --c-agency: #199e70; --c-neutral: #7d7c75;
+  --critical: #e66767; --warn: #fab219;
+}
+* { box-sizing: border-box; }
+html { background: var(--page); }
+body { margin: 0; background: var(--page); color: var(--text); font: 400 15px/1.5 var(--body); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--c-realty); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 20px 56px; }
+
+/* ---- header ---- */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 22px 0 14px; }
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.mark { width: 38px; height: 38px; flex: none; }
+h1 { font: 650 24px/1.1 var(--display); letter-spacing: -.01em; margin: 0; }
+.sub { color: var(--muted); font-size: 13px; margin-top: 3px; }
+.status { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; color: var(--text-2); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); position: relative; }
+.dot.live::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--good); opacity: 0; animation: pulse 2.4s ease-out infinite; }
+.dot.stale { background: var(--warn); } .dot.sample { background: var(--c-neutral); }
+@keyframes pulse { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(1.4); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dot.live::after { animation: none; } }
+.icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); }
+.icon-btn:hover { background: var(--surface-2); }
+
+/* ---- tabs ---- */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 18px; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { display: inline-flex; align-items: center; gap: 9px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 12px; background: transparent; color: var(--text-2); white-space: nowrap; font-weight: 500; }
+.tab:hover { background: var(--surface); }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--text); border-color: color-mix(in srgb, var(--text) 28%, transparent); box-shadow: 0 1px 0 var(--line); }
+.tab i { width: 10px; height: 10px; border-radius: 3px; background: var(--c-neutral); }
+
+/* ---- tiles ---- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 14px; min-width: 0; }
+.t-label { color: var(--muted); font-size: 13px; }
+.t-value { font: 600 30px/1.15 var(--display); letter-spacing: -.015em; margin: 6px 0 4px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.t-value small { font: 500 14px var(--body); color: var(--text-2); letter-spacing: 0; margin-left: 3px; }
+.t-foot { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 4px; color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.chip svg { width: 11px; height: 11px; flex: none; }
+.chip.up svg { color: var(--good); } .chip.down svg { color: var(--critical); }
+
+/* ---- cards & grid ---- */
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 16px; min-width: 0; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+.span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+@media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } .t-value { font-size: 25px; } .tile { padding: 14px 14px 12px; } .card { padding: 16px 14px 14px; } .wrap { padding: 0 14px 40px; } }
+@media (max-width: 900px) { .span-8, .span-7, .span-6, .span-5, .span-4 { grid-column: span 12; } }
+.card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+h2 { font: 600 16px/1.3 var(--display); letter-spacing: -.005em; margin: 0; }
+.card header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.tbl-btn { border: 1px solid var(--line); background: transparent; border-radius: 8px; padding: 4px 10px; font-size: 12.5px; color: var(--text-2); flex: none; }
+.tbl-btn:hover, .tbl-btn[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 8px; font-size: 13px; color: var(--text-2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend b { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.plot { position: relative; height: 270px; }
+.plot.short { height: 220px; }
+.tblwrap { max-height: 300px; overflow: auto; margin-top: 4px; border-top: 1px solid var(--line); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-weight: 500; color: var(--muted); padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--surface); }
+td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; padding-right: 0; padding-left: 10px; }
+.bar { height: 6px; border-radius: 3px; background: var(--surface-2); min-width: 90px; overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 3px; }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.stat b { display: block; font: 600 24px/1.2 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 12.5px; }
+.status-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.status-tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-neutral); }
+.status-tag.live i { background: var(--good); } .status-tag.planned i { background: transparent; border: 2px solid var(--c-neutral); }
+.dots { display: inline-flex; gap: 3px; vertical-align: middle; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--grid); border: 1px solid var(--line); }
+.dots i.on { background: var(--text-2); border-color: var(--text-2); }
+.note { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.foot { margin-top: 26px; color: var(--muted); font-size: 12.5px; display: flex; gap: 8px 18px; flex-wrap: wrap; justify-content: space-between; }
+.skeleton { height: 280px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.err { padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <rect x="9" y="21" width="6" height="10" rx="2" fill="var(--c-realty)"/>
+        <rect x="17" y="13" width="6" height="18" rx="2" fill="var(--c-store)"/>
+        <rect x="25" y="17" width="6" height="14" rx="2" fill="var(--c-agency)"/>
+      </svg>
+      <div><h1>Group Command Center</h1><div class="sub" id="sub">Three businesses, one live view</div></div>
+    </div>
+    <div class="status">
+      <span class="pill" id="statusPill"><span class="dot"></span><span id="statusText">Loading…</span></span>
+      <button class="icon-btn" id="themeBtn" aria-label="Switch colour theme" title="Switch colour theme">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Views" id="tabs"></nav>
+  <main id="view" aria-live="polite"><div class="skeleton"></div></main>
+  <div class="foot"><span id="footL"></span><span>Built with n8n · Google Sheets · Gemini. All data on this page is synthetic.</span></div>
+</div>
+
+<script type="application/json" id="sample">{"generated_at":"2026-10-19T09:46:46.722Z","ref_date":"2026-10-19","window":{"from":"2026-09-20","to":"2026-10-19","days":30},"go_live":"2026-09-05","data_note":"Synthetic demo data","group":{"kpis":{"revenue":1032824,"revenue_change_pct":27.8,"orders":575,"leads":633,"net_cash":510452,"first_response_min":6.9},"daily_revenue":[{"date":"2026-09-20","realty":0,"store":4712,"agency":0},{"date":"2026-09-21","realty":26335,"store":4352,"agency":5500},{"date":"2026-09-22","realty":0,"store":5769,"agency":15000},{"date":"2026-09-23","realty":19761,"store":6461,"agency":15000},{"date":"2026-09-24","realty":20522,"store":6468,"agency":50000},{"date":"2026-09-25","realty":0,"store":5082,"agency":0},{"date":"2026-09-26","realty":0,"store":5790,"agency":0},{"date":"2026-09-27","realty":0,"store":5736,"agency":0},{"date":"2026-09-28","realty":65735,"store":4886,"agency":8000},{"date":"2026-09-29","realty":49230,"store":4380,"agency":28000},{"date":"2026-09-30","realty":0,"store":5424,"agency":13500},{"date":"2026-10-01","realty":0,"store":6532,"agency":62000},{"date":"2026-10-02","realty":0,"store":4945,"agency":0},{"date":"2026-10-03","realty":0,"store":5831,"agency":0},{"date":"2026-10-04","realty":0,"store":4459,"agency":0},{"date":"2026-10-05","realty":0,"store":5248,"agency":94000},{"date":"2026-10-06","realty":51907,"store":6514,"agency":0},{"date":"2026-10-07","realty":0,"store":4592,"agency":15000},{"date":"2026-10-08","realty":36976,"store":5934,"agency":0},{"date":"2026-10-09","realty":36878,"store":3855,"agency":0},{"date":"2026-10-10","realty":18063,"store":6619,"agency":0},{"date":"2026-10-11","realty":0,"store":7551,"agency":0},{"date":"2026-10-12","realty":29114,"store":5636,"agency":47000},{"date":"2026-10-13","realty":25644,"store":6492,"agency":0},{"date":"2026-10-14","realty":0,"store":5708,"agency":8000},{"date":"2026-10-15","realty":86440,"store":3849,"agency":23000},{"date":"2026-10-16","realty":0,"store":5608,"agency":0},{"date":"2026-10-17","realty":0,"store":5289,"agency":0},{"date":"2026-10-18","realty":18379,"store":3312,"agency":0},{"date":"2026-10-19","realty":0,"store":6804,"agency":0}],"revenue_share":[{"key":"realty","name":"Palm & Co Realty","value":484984},{"key":"store","name":"Oasis Home Store","value":163840},{"key":"agency","name":"Pixel Bridge Agency","value":384000}],"net_cash_by_business":[{"key":"realty","name":"Palm & Co Realty","value":282139},{"key":"store","name":"Oasis Home Store","value":20313},{"key":"agency","name":"Pixel Bridge Agency","value":208000}],"automation":{"hours_saved_30d":98,"hours_saved_total":139,"runs_total":1420,"hours_by_workflow":[{"name":"lead-qualifier","value":88.4},{"name":"kpi-sync","value":15},{"name":"support-agent","value":11.3},{"name":"order-inventory-bot","value":10.2},{"name":"staff-assistant","value":9.2},{"name":"weekly-summary","value":5.3}],"hours_weekly":[{"week":"2026-08-25","hours":0},{"week":"2026-09-01","hours":9},{"week":"2026-09-08","hours":17.6},{"week":"2026-09-15","hours":20.5},{"week":"2026-09-22","hours":22.7},{"week":"2026-09-29","hours":21.8},{"week":"2026-10-06","hours":25.8},{"week":"2026-10-13","hours":22.1}],"first_response_trend":[{"week":"2026-07-21","minutes":161.2},{"week":"2026-07-28","minutes":151},{"week":"2026-08-04","minutes":153.4},{"week":"2026-08-11","minutes":155.6},{"week":"2026-08-18","minutes":162.7},{"week":"2026-08-25","minutes":136.6},{"week":"2026-09-01","minutes":96.4},{"week":"2026-09-08","minutes":7.6},{"week":"2026-09-15","minutes":7.1},{"week":"2026-09-22","minutes":6.5},{"week":"2026-09-29","minutes":6.1},{"week":"2026-10-06","minutes":7.4},{"week":"2026-10-13","minutes":7.6}],"first_response_before_min":153.5,"first_response_after_min":7.1,"tickets_30d":153,"agent_share_pct":76.5,"human_response_before_sec":4685,"human_response_after_sec":1071,"agent_response_sec":8.5,"processes_live":8,"processes_total":15,"register_hours_saved_live":169,"register_hours_open":69,"top_processes":[{"id":"P01","business":"realty","process":"Qualify inbound property leads","manual_hours":52,"saveable_hours":52,"feasibility":5,"status":"Live","automated_by":"lead-qualifier"},{"id":"P06","business":"store","process":"Answer product and policy FAQs","manual_hours":32,"saveable_hours":32,"feasibility":5,"status":"Live","automated_by":"support-agent"},{"id":"P05","business":"store","process":"Answer order-status questions","manual_hours":30,"saveable_hours":30,"feasibility":5,"status":"Live","automated_by":"order-inventory-bot"},{"id":"P10","business":"agency","process":"Compile client weekly status reports","manual_hours":32,"saveable_hours":25.6,"feasibility":4,"status":"Planned","automated_by":""},{"id":"P08","business":"store","process":"Copy daily sales into the finance sheet","manual_hours":17.5,"saveable_hours":17.5,"feasibility":5,"status":"Live","automated_by":"kpi-sync"},{"id":"P07","business":"store","process":"Check stock against reorder levels","manual_hours":14.7,"saveable_hours":14.7,"feasibility":5,"status":"Planned","automated_by":""},{"id":"P14","business":"group","process":"Month-end group reporting","manual_hours":16,"saveable_hours":12.8,"feasibility":4,"status":"Live","automated_by":"kpi-sync"}]}},"businesses":{"realty":{"name":"Palm & Co Realty","tag":"Real estate","kpis":{"revenue":484984,"revenue_change_pct":14.1,"orders":16,"orders_change_pct":0,"avg_order_value":30311,"leads":223,"leads_change_pct":11.5,"conversion_pct":4.5,"first_response_min":7.7,"net_cash":282139,"income":484984,"expense":202844},"daily_revenue":[0,26335,0,19761,20522,0,0,0,65735,49230,0,0,0,0,0,0,51907,0,36976,36878,18063,0,29114,25644,0,86440,0,0,18379,0],"cash_weekly":[{"week":"2026-08-25","income":100081,"expense":100895},{"week":"2026-09-01","income":139435,"expense":44629},{"week":"2026-09-08","income":84365,"expense":23417},{"week":"2026-09-15","income":85413,"expense":24692},{"week":"2026-09-22","income":106018,"expense":102121},{"week":"2026-09-29","income":49230,"expense":43314},{"week":"2026-10-06","income":172938,"expense":22678},{"week":"2026-10-13","income":130463,"expense":24589}],"expense_by_category":[{"name":"Salaries","value":78000},{"name":"Marketing","value":70344},{"name":"Portal fees","value":32500},{"name":"Rent","value":22000}],"leads_by_score":[{"name":"Hot","value":47},{"name":"Warm","value":63},{"name":"Cold","value":113}],"leads_by_source":[{"name":"Property portal","value":86},{"name":"Instagram","value":53},{"name":"Google Ads","value":31},{"name":"Referral","value":28},{"name":"WhatsApp","value":25}],"leads_by_status":[{"name":"contacted","value":114},{"name":"new","value":44},{"name":"lost","value":43},{"name":"qualified","value":12},{"name":"won","value":10}],"team":[{"name":"Yusuf R.","tasks":200,"response_min":23.9,"csat":4.42},{"name":"Omar K.","tasks":178,"response_min":30.2,"csat":4.55},{"name":"Hana S.","tasks":173,"response_min":28.4,"csat":4.39},{"name":"Layla M.","tasks":168,"response_min":25.5,"csat":4.39}],"tickets":{"total":47,"agent_share_pct":83,"agent_response_sec":8.7,"human_response_sec":1321}},"store":{"name":"Oasis Home Store","tag":"Online store","kpis":{"revenue":163840,"revenue_change_pct":23,"orders":537,"orders_change_pct":21.2,"avg_order_value":305,"leads":350,"leads_change_pct":18.6,"conversion_pct":9.4,"first_response_min":6.5,"net_cash":20313,"income":163840,"expense":143526},"daily_revenue":[4712,4352,5769,6461,6468,5082,5790,5736,4886,4380,5424,6532,4945,5831,4459,5248,6514,4592,5934,3855,6619,7551,5636,6492,5708,3849,5608,5289,3312,6804],"cash_weekly":[{"week":"2026-08-25","income":34200,"expense":49269},{"week":"2026-09-01","income":29954,"expense":28499},{"week":"2026-09-08","income":29066,"expense":20291},{"week":"2026-09-15","income":28938,"expense":20493},{"week":"2026-09-22","income":40193,"expense":52414},{"week":"2026-09-29","income":36819,"expense":32885},{"week":"2026-10-06","income":40701,"expense":26995},{"week":"2026-10-13","income":37063,"expense":24980}],"expense_by_category":[{"name":"Cost of goods","value":87341},{"name":"Salaries","value":26000},{"name":"Advertising","value":17346},{"name":"Rent","value":8000},{"name":"Shipping","value":4840}],"leads_by_score":[{"name":"Hot","value":79},{"name":"Warm","value":100},{"name":"Cold","value":171}],"leads_by_source":[{"name":"Instagram","value":109},{"name":"Google Ads","value":82},{"name":"Newsletter","value":66},{"name":"WhatsApp","value":55},{"name":"Website chat","value":38}],"leads_by_status":[{"name":"contacted","value":158},{"name":"lost","value":79},{"name":"new","value":53},{"name":"won","value":33},{"name":"qualified","value":27}],"team":[{"name":"Dina A.","tasks":205,"response_min":28.9,"csat":4.81},{"name":"Rami T.","tasks":189,"response_min":26.6,"csat":4.53},{"name":"Noor B.","tasks":177,"response_min":25.7,"csat":4.49},{"name":"Sami H.","tasks":169,"response_min":30.9,"csat":4.44}],"tickets":{"total":86,"agent_share_pct":75.6,"agent_response_sec":8.7,"human_response_sec":1116},"low_stock":[{"sku":"SKU-116","product":"Wooden serving tray","stock":3,"reorder_level":15},{"sku":"SKU-102","product":"Ceramic vase, sand","stock":18,"reorder_level":25},{"sku":"SKU-113","product":"Floor lamp, matte black","stock":7,"reorder_level":12},{"sku":"SKU-106","product":"Brass table lamp","stock":14,"reorder_level":15},{"sku":"SKU-110","product":"Rattan lounge chair","stock":6,"reorder_level":6}]},"agency":{"name":"Pixel Bridge Agency","tag":"Services","kpis":{"revenue":384000,"revenue_change_pct":53.6,"orders":22,"orders_change_pct":46.7,"avg_order_value":17455,"leads":60,"leads_change_pct":30.4,"conversion_pct":6.7,"first_response_min":6.1,"net_cash":208000,"income":384000,"expense":176000},"daily_revenue":[0,5500,15000,15000,50000,0,0,0,8000,28000,13500,62000,0,0,0,94000,0,15000,0,0,0,0,47000,0,8000,23000,0,0,0,0],"cash_weekly":[{"week":"2026-08-25","income":27000,"expense":121800},{"week":"2026-09-01","income":42000,"expense":32800},{"week":"2026-09-08","income":153500,"expense":1800},{"week":"2026-09-15","income":27500,"expense":17800},{"week":"2026-09-22","income":88000,"expense":121800},{"week":"2026-09-29","income":197500,"expense":32800},{"week":"2026-10-06","income":62000,"expense":1800},{"week":"2026-10-13","income":31000,"expense":17800}],"expense_by_category":[{"name":"Salaries","value":120000},{"name":"Contractors","value":32000},{"name":"Rent","value":15000},{"name":"Software","value":9000}],"leads_by_score":[{"name":"Hot","value":17},{"name":"Warm","value":18},{"name":"Cold","value":25}],"leads_by_source":[{"name":"Website form","value":16},{"name":"LinkedIn","value":16},{"name":"Events","value":15},{"name":"Referral","value":13}],"leads_by_status":[{"name":"contacted","value":23},{"name":"new","value":16},{"name":"lost","value":14},{"name":"won","value":4},{"name":"qualified","value":3}],"team":[{"name":"Karim D.","tasks":197,"response_min":27.6,"csat":4.38},{"name":"Maya L.","tasks":192,"response_min":22.3,"csat":4.46},{"name":"Tariq N.","tasks":180,"response_min":24.8,"csat":4.33},{"name":"Reem F.","tasks":178,"response_min":25.8,"csat":4.36}],"tickets":{"total":20,"agent_share_pct":65,"agent_response_sec":8.3,"human_response_sec":1034}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var DATA_URL = 'kpis.json';
+  var REFRESH_MS = 60000;
+  var TABS = [
+    { id: 'group', label: 'Group overview', color: null },
+    { id: 'realty', label: 'Palm & Co Realty', color: '--c-realty' },
+    { id: 'store', label: 'Oasis Home Store', color: '--c-store' },
+    { id: 'agency', label: 'Pixel Bridge Agency', color: '--c-agency' },
+    { id: 'automation', label: 'Automation impact', color: null }
+  ];
+  var NOUN = {
+    realty: { orders: 'Deals closed', aov: 'Avg commission', revenue: 'Commission revenue' },
+    store: { orders: 'Orders', aov: 'Avg order value', revenue: 'Sales revenue' },
+    agency: { orders: 'Invoices paid', aov: 'Avg invoice', revenue: 'Invoiced revenue' }
+  };
+  var state = { data: null, tab: 'group', usingSample: false };
+  var charts = [];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var css = function (v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+  /* ---------- formatting ---------- */
+  function compact(n) {
+    var a = Math.abs(n), s = n < 0 ? '-' : '';
+    if (a >= 1e6) return s + (a / 1e6).toFixed(2) + 'M';
+    if (a >= 1e5) return s + Math.round(a / 1e3) + 'K';
+    if (a >= 1e3) return s + (a / 1e3).toFixed(1) + 'K';
+    return s + Math.round(a);
+  }
+  var aed = function (n) { return 'AED ' + compact(n); };
+  var int = function (n) { return Math.round(n).toLocaleString('en-US'); };
+  function minutes(m) {
+    if (m >= 120) return Math.floor(m / 60) + ' h ' + Math.round(m % 60) + ' min';
+    if (m >= 60) return '1 h ' + Math.round(m - 60) + ' min';
+    return (m < 10 ? m.toFixed(1) : Math.round(m)) + ' min';
+  }
+  function seconds(s) {
+    if (s >= 3600) return (s / 3600).toFixed(1) + ' h';
+    if (s >= 90) return Math.round(s / 60) + ' min';
+    return Math.round(s) + ' s';
+  }
+  function shortDate(iso) {
+    var d = new Date(iso + 'T00:00:00Z');
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  }
+  function chip(p, lowerIsBetter) {
+    if (p === null || p === undefined) return '';
+    var up = p >= 0, good = lowerIsBetter ? !up : up;
+    var arrow = up ? '<path d="M5.5 1.5 10 9H1z" fill="currentColor"/>' : '<path d="M5.5 9.5 1 2h9z" fill="currentColor"/>';
+    return '<span class="chip ' + (good ? 'up' : 'down') + '"><svg viewBox="0 0 11 11" aria-hidden="true">' + arrow + '</svg>' +
+      (up ? '+' : '') + p.toFixed(1) + '%<span class="sr" style="position:absolute;left:-9999px">' + (good ? ' improvement' : ' decline') + '</span></span>';
+  }
+  function tile(label, value, foot) {
+    return '<div class="tile"><div class="t-label">' + esc(label) + '</div><div class="t-value">' + value + '</div><div class="t-foot">' + (foot || '') + '</div></div>';
+  }
+
+  /* ---------- chart plumbing ---------- */
+  function destroyCharts() { charts.forEach(function (c) { c.destroy(); }); charts = []; }
+  function baseOptions(extra) {
+    var o = {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 450 },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: css('--surface'), titleColor: css('--text'), bodyColor: css('--text-2'),
+          borderColor: css('--line'), borderWidth: 1, padding: 10, cornerRadius: 8, boxPadding: 4,
+          titleFont: { family: css('--body'), weight: '600' }, bodyFont: { family: css('--body') },
+          usePointStyle: true
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, border: { color: css('--grid') }, ticks: { color: css('--muted'), maxRotation: 0, autoSkipPadding: 14, font: { size: 12 } } },
+        y: { beginAtZero: true, grid: { color: css('--grid') }, border: { display: false }, ticks: { color: css('--muted'), font: { size: 12 }, padding: 8 } }
+      }
+    };
+    return deepMerge(o, extra || {});
+  }
+  function deepMerge(a, b) {
+    Object.keys(b).forEach(function (k) {
+      if (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object') deepMerge(a[k], b[k]);
+      else a[k] = b[k];
+    });
+    return a;
+  }
+  var crosshair = {
+    id: 'crosshair',
+    afterDatasetsDraw: function (chart) {
+      var a = chart.tooltip && chart.tooltip.getActiveElements ? chart.tooltip.getActiveElements() : [];
+      if (!a.length || chart.config.type !== 'line') return;
+      var x = a[0].element.x, ys = chart.scales.y, ctx = chart.ctx;
+      ctx.save(); ctx.strokeStyle = css('--text-2'); ctx.globalAlpha = .5; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, ys.top); ctx.lineTo(x, ys.bottom); ctx.stroke(); ctx.restore();
+    }
+  };
+  function legendHTML(items) {
+    if (items.length < 2) return '';
+    return '<div class="legend">' + items.map(function (i) { return '<span><b style="background:' + i.color + '"></b>' + esc(i.label) + '</span>'; }).join('') + '</div>';
+  }
+  function card(id, title, subtitle, span, legend, short) {
+    return '<section class="card span-' + span + '" id="card-' + id + '"><header><div><h2>' + esc(title) + '</h2>' + (subtitle ? '<p>' + esc(subtitle) + '</p>' : '') +
+      '</div><button class="tbl-btn" aria-pressed="false" data-for="' + id + '">Table</button></header>' + (legend || '') +
+      '<div class="plot' + (short ? ' short' : '') + '"><canvas id="cv-' + id + '" role="img" aria-label="' + esc(title) + '"></canvas></div><div class="tblwrap" id="tb-' + id + '" hidden></div></section>';
+  }
+  function mk(id, config) {
+    var cv = document.getElementById('cv-' + id);
+    if (!cv || !window.Chart) return;
+    config.plugins = (config.plugins || []).concat([crosshair]);
+    var c = new Chart(cv, config); c.__id = id; charts.push(c);
+  }
+  function wireTables() {
+    document.querySelectorAll('.tbl-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-for'), box = document.getElementById('tb-' + id);
+        var on = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', on); box.hidden = !on;
+        if (!on) return;
+        var chart = charts.filter(function (c) { return c.__id === id; })[0];
+        if (!chart) return;
+        var ds = chart.data.datasets, lab = chart.data.labels;
+        var head = '<tr><th></th>' + ds.map(function (d) { return '<th class="n">' + esc(d.label) + '</th>'; }).join('') + '</tr>';
+        var body = lab.map(function (l, i) { return '<tr><td>' + esc(l) + '</td>' + ds.map(function (d) { return '<td class="n">' + int(d.data[i]) + '</td>'; }).join('') + '</tr>'; }).join('');
+        box.innerHTML = '<table>' + head + body + '</table>';
+      });
+    });
+  }
+  var moneyTip = { callbacks: { label: function (c) { return ' ' + c.dataset.label + ': AED ' + int(c.parsed.y !== undefined && c.chart.options.indexAxis !== 'y' ? c.parsed.y : c.parsed.x); } } };
+  var yMoney = { ticks: { callback: function (v) { return compact(v); } } };
+  var topRound = { borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: 'bottom' };
+  var rightRound = { borderRadius: { topRight: 4, bottomRight: 4 }, borderSkipped: 'left' };
+  function rolling(arr, n) { return arr.map(function (_, i) { var s = arr.slice(Math.max(0, i - n + 1), i + 1); return Math.round(s.reduce(function (a, b) { return a + b; }, 0) / s.length); }); }
+
+  /* ---------- views ---------- */
+  function groupView(D) {
+    var g = D.group, k = g.kpis, A = g.automation;
+    var labels = g.daily_revenue.map(function (r) { return shortDate(r.date); });
+    var keys = ['realty', 'store', 'agency'];
+    var html = '<div class="tiles">' +
+      tile('Revenue, last 30 days', aed(k.revenue), chip(k.revenue_change_pct) + ' vs previous 30 days') +
+      tile('Orders and deals', int(k.orders), 'across all three businesses') +
+      tile('New leads', int(k.leads), 'avg first reply ' + minutes(k.first_response_min)) +
+      tile('Net cash flow', aed(k.net_cash), 'income minus expenses') +
+      tile('Hours saved by automation', int(A.hours_saved_30d) + '<small>h</small>', 'last 30 days · ' + int(A.hours_saved_total) + ' h since launch') + '</div>' +
+      '<div class="grid">' +
+      card('g-rev', 'Daily revenue by business', '7-day rolling average, AED', 8, legendHTML(keys.map(function (b) { return { label: D.businesses[b].name, color: css('--c-' + b) }; }))) +
+      card('g-share', 'Revenue by business', 'Last 30 days, AED', 4, '') + '</div>' +
+      '<div class="grid">' +
+      card('g-net', 'Net cash flow by business', 'Income minus expenses, last 30 days, AED', 5, '', true) +
+      '<section class="card span-7"><header><div><h2>Automation snapshot</h2><p>Measured against the manual process each workflow replaced</p></div></header>' +
+      '<div class="stat-row" style="margin-top:14px">' +
+      '<div class="stat"><b>' + minutes(A.first_response_before_min) + '</b><span>first reply to a lead, before automation</span></div>' +
+      '<div class="stat"><b>' + minutes(A.first_response_after_min) + '</b><span>first reply to a lead, now</span></div>' +
+      '<div class="stat"><b>' + A.agent_share_pct.toFixed(0) + '%</b><span>of support tickets resolved by the agent</span></div></div>' +
+      '<p class="note" style="margin:18px 0 0">' + A.processes_live + ' of ' + A.processes_total + ' mapped processes are live. The register shows another <b>' + int(A.register_hours_open) + ' hours a month</b> still open to automate. See the Automation impact tab for the ranking.</p></section></div>';
+    return {
+      html: html, draw: function () {
+        mk('g-rev', { type: 'line', data: { labels: labels, datasets: keys.map(function (b) {
+          return { label: D.businesses[b].name, data: rolling(g.daily_revenue.map(function (r) { return r[b]; }), 7), borderColor: css('--c-' + b), backgroundColor: css('--c-' + b), borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, pointHoverBorderWidth: 2, pointHoverBorderColor: css('--surface'), tension: .3 };
+        }) }, options: baseOptions({ plugins: { tooltip: moneyTip }, scales: { y: yMoney } }) });
+        mk('g-share', { type: 'bar', data: { labels: g.revenue_share.map(function (r) { return r.name; }), datasets: [{ label: 'Revenue', data: g.revenue_share.map(function (r) { return r.value; }), backgroundColor: g.revenue_share.map(function (r) { return css('--c-' + r.key); }), borderRadius: 4, borderSkipped: 'start', barThickness: 22 }] },
+          options: baseOptions({ indexAxis: 'y', interaction: { axis: 'y' }, plugins: { tooltip: moneyTip }, scales: { x: yMoney, y: { grid: { display: false }, ticks: { color: css('--text-2') } } } }) });
+        mk('g-net', { type: 'bar', data: { labels: g.net_cash_by_business.map(function (r) { return r.name; }), datasets: [{ label: 'Net cash', data: g.net_cash_by_business.map(function (r) { return r.value; }), backgroundColor: g.net_cash_by_business.map(function (r) { return css('--c-' + r.key); }), borderRadius: 4, borderSkipped: 'start', barThickness: 22 }] },
+          options: baseOptions({ indexAxis: 'y', interaction: { axis: 'y' }, plugins: { tooltip: moneyTip }, scales: { x: yMoney, y: { grid: { display: false }, ticks: { color: css('--text-2') } } } }) });
+      }
+    };
+  }
+
+  function businessView(D, key) {
+    var B = D.businesses[key], k = B.kpis, N = NOUN[key], col = function () { return css('--c-' + key); };
+    var maxTasks = Math.max.apply(null, B.team.map(function (p) { return p.tasks; }).concat([1]));
+    var html = '<div class="tiles">' +
+      tile(N.revenue + ', 30 days', aed(k.revenue), chip(k.revenue_change_pct) + ' vs previous 30 days') +
+      tile(N.orders, int(k.orders), chip(k.orders_change_pct) + ' vs previous 30 days') +
+      tile(N.aov, aed(k.avg_order_value), 'per completed ' + (key === 'realty' ? 'deal' : key === 'store' ? 'order' : 'invoice')) +
+      tile('New leads', int(k.leads), chip(k.leads_change_pct) + ' · ' + k.conversion_pct + '% won') +
+      tile('First reply to a lead', minutes(k.first_response_min), 'average, last 30 days') +
+      tile('Net cash flow', aed(k.net_cash), 'in ' + aed(k.income) + ' · out ' + aed(k.expense)) + '</div>' +
+      '<div class="grid">' +
+      card(key + '-rev', 'Daily revenue', 'Last 30 days, AED', 7, '') +
+      card(key + '-cash', 'Cash flow by week', 'Income and expenses, AED', 5, legendHTML([{ label: 'Income', color: col() }, { label: 'Expenses', color: css('--c-neutral') }])) + '</div>' +
+      '<div class="grid">' +
+      card(key + '-score', 'Leads by score', 'Scored automatically by the qualification workflow', 4, '', true) +
+      card(key + '-src', 'Leads by source', 'Last 30 days', 4, '', true) +
+      card(key + '-exp', 'Where the money goes', 'Expenses by category, last 30 days, AED', 4, '', true) + '</div>' +
+      '<div class="grid"><section class="card span-7"><header><div><h2>Team, last 4 weeks</h2><p>Tasks completed, reply time and customer score</p></div></header><div class="tblwrap" style="border:0;max-height:none"><table><tr><th>Team member</th><th>Tasks</th><th class="n">Reply time</th><th class="n">CSAT</th></tr>' +
+      B.team.map(function (p) {
+        return '<tr><td>' + esc(p.name) + '</td><td><div style="display:flex;align-items:center;gap:10px"><div class="bar" style="flex:1"><i style="width:' + Math.round(p.tasks / maxTasks * 100) + '%;background:var(--c-' + key + ')"></i></div><span>' + p.tasks + '</span></div></td><td class="n">' + minutes(p.response_min) + '</td><td class="n">' + p.csat.toFixed(2) + '</td></tr>';
+      }).join('') + '</table></div></section>' +
+      '<section class="card span-5"><header><div><h2>Support tickets</h2><p>Handled by the support agent or by a person</p></div></header><div class="stat-row" style="margin-top:12px">' +
+      '<div class="stat"><b>' + B.tickets.total + '</b><span>tickets, 30 days</span></div>' +
+      '<div class="stat"><b>' + B.tickets.agent_share_pct.toFixed(0) + '%</b><span>resolved by the agent</span></div>' +
+      '<div class="stat"><b>' + seconds(B.tickets.agent_response_sec) + '</b><span>agent reply · people ' + seconds(B.tickets.human_response_sec) + '</span></div></div>' +
+      (B.low_stock ? '<h2 style="margin:22px 0 8px;font-size:14px">Low stock</h2><table>' + B.low_stock.map(function (s) {
+        var short = s.stock < s.reorder_level;
+        return '<tr><td>' + esc(s.product) + '<div class="note" style="font-size:12px">' + esc(s.sku) + '</div></td><td class="n">' + s.stock + ' of ' + s.reorder_level + ' <span class="status-tag"><i style="background:' + (short ? 'var(--critical)' : 'var(--warn)') + '"></i>' + (short ? 'Reorder now' : 'At limit') + '</span></td></tr>';
+      }).join('') + '</table>' : '') + '</section></div>';
+    return {
+      html: html, draw: function () {
+        var c = col();
+        mk(key + '-rev', { type: 'bar', data: { labels: B.daily_revenue.map(function (_, i) { return shortDate(addDays(D.window.from, i)); }), datasets: [{ label: 'Revenue', data: B.daily_revenue, backgroundColor: c, ...topRound, maxBarThickness: 18 }] },
+          options: baseOptions({ plugins: { tooltip: moneyTip }, scales: { y: yMoney } }) });
+        mk(key + '-cash', { type: 'bar', data: { labels: B.cash_weekly.map(function (w) { return shortDate(w.week); }), datasets: [
+          { label: 'Income', data: B.cash_weekly.map(function (w) { return w.income; }), backgroundColor: c, ...topRound, maxBarThickness: 16 },
+          { label: 'Expenses', data: B.cash_weekly.map(function (w) { return w.expense; }), backgroundColor: css('--c-neutral'), ...topRound, maxBarThickness: 16 }] },
+          options: baseOptions({ datasets: { bar: { categoryPercentage: .8, barPercentage: .9 } }, plugins: { tooltip: moneyTip }, scales: { y: yMoney } }) });
+        var hbar = function (id, rows, label, money) {
+          mk(id, { type: 'bar', data: { labels: rows.map(function (r) { return r.name; }), datasets: [{ label: label, data: rows.map(function (r) { return r.value; }), backgroundColor: c, ...rightRound, barThickness: 16 }] },
+            options: baseOptions({ indexAxis: 'y', interaction: { axis: 'y' }, plugins: money ? { tooltip: moneyTip } : {}, scales: { x: money ? yMoney : {}, y: { grid: { display: false }, ticks: { color: css('--text-2') } } } }) });
+        };
+        hbar(key + '-score', B.leads_by_score, 'Leads', false);
+        hbar(key + '-src', B.leads_by_source, 'Leads', false);
+        hbar(key + '-exp', B.expense_by_category, 'Expenses', true);
+      }
+    };
+  }
+
+  function automationView(D) {
+    var A = D.group.automation;
+    var maxS = Math.max.apply(null, A.top_processes.map(function (p) { return p.saveable_hours; }).concat([1]));
+    var html = '<div class="tiles">' +
+      tile('Hours saved since launch', int(A.hours_saved_total) + '<small>h</small>', int(A.runs_total) + ' logged workflow runs') +
+      tile('Hours saved, 30 days', int(A.hours_saved_30d) + '<small>h</small>', 'from the Automation Ledger') +
+      tile('First reply to a lead', minutes(A.first_response_after_min), 'was ' + minutes(A.first_response_before_min) + ' before launch') +
+      tile('Tickets resolved by agent', A.agent_share_pct.toFixed(0) + '%', A.tickets_30d + ' tickets in 30 days') +
+      tile('Support reply time', seconds(A.agent_response_sec), 'agent · people took ' + seconds(A.human_response_before_sec) + ' before') + '</div>' +
+      '<div class="grid">' +
+      card('a-fr', 'Average first reply to a new lead', 'Weekly average, minutes. Dashed line marks the automation launch', 7, '') +
+      card('a-wf', 'Hours saved by workflow', 'Since launch', 5, '', false) + '</div>' +
+      '<div class="grid">' +
+      card('a-wk', 'Hours saved per week', 'Logged by the workflows', 5, '', true) +
+      '<section class="card span-7"><header><div><h2>Automation backlog, ranked</h2><p>Monthly hours a process could save: hours × feasibility score</p></div></header><table><tr><th>Process</th><th>Hours / month</th><th>Feasibility</th><th>Status</th></tr>' +
+      A.top_processes.map(function (p) {
+        var st = p.status.toLowerCase();
+        var dots = [1, 2, 3, 4, 5].map(function (i) { return '<i class="' + (i <= p.feasibility ? 'on' : '') + '"></i>'; }).join('');
+        return '<tr><td>' + esc(p.process) + '<div class="note" style="font-size:12px">' + esc(p.business) + '</div></td><td><div style="display:flex;align-items:center;gap:10px"><div class="bar" style="flex:1;min-width:60px"><i style="width:' + Math.round(p.saveable_hours / maxS * 100) + '%;background:var(--c-realty)"></i></div><span>' + p.saveable_hours + '</span></div></td><td><span class="dots" role="img" aria-label="' + p.feasibility + ' out of 5">' + dots + '</span></td><td><span class="status-tag ' + st + '"><i></i>' + esc(p.status) + '</span></td></tr>';
+      }).join('') + '</table></section></div>' +
+      '<section class="card"><h2>How these numbers are measured</h2><p class="note" style="margin:8px 0 0">Each workflow appends one row to an Automation Ledger sheet every time it runs, with the minutes it saved compared with the manual baseline timed during testing. Response times come from the lead and ticket logs. The data on this page is synthetic, so treat the figures as a demonstration of the method, not as results from a real company.</p></section>';
+    return {
+      html: html, draw: function () {
+        var fr = A.first_response_trend, lbl = fr.map(function (w) { return shortDate(w.week); });
+        var goLive = { id: 'goLive', afterDatasetsDraw: function (chart) {
+          var gl = D.go_live, i = -1;
+          for (var n = 0; n < fr.length; n++) if (fr[n].week <= gl) i = n;
+          if (i < 0 || i >= fr.length - 1) return;
+          var span = (new Date(fr[i + 1].week) - new Date(fr[i].week)) / 864e5, frac = (new Date(gl) - new Date(fr[i].week)) / 864e5 / span;
+          var x = chart.scales.x.getPixelForValue(i + frac), ys = chart.scales.y, ctx = chart.ctx;
+          ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = css('--text-2'); ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.moveTo(x, ys.top); ctx.lineTo(x, ys.bottom); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = css('--text'); ctx.font = '600 12px ' + css('--body'); ctx.textAlign = 'left'; ctx.fillText('Automation live', x + 8, ys.top + 14); ctx.restore();
+        } };
+        mk('a-fr', { type: 'line', plugins: [goLive], data: { labels: lbl, datasets: [{ label: 'Minutes to first reply', data: fr.map(function (w) { return w.minutes; }), borderColor: css('--c-realty'), backgroundColor: css('--c-realty'), borderWidth: 2, pointRadius: 3, pointHoverRadius: 6, pointBackgroundColor: css('--c-realty'), pointBorderColor: css('--surface'), pointBorderWidth: 2, tension: .25 }] },
+          options: baseOptions({ plugins: { tooltip: { callbacks: { label: function (c) { return ' ' + minutes(c.parsed.y) + ' to first reply'; } } } }, scales: { y: { ticks: { callback: function (v) { return v + ' min'; } } } } }) });
+        mk('a-wf', { type: 'bar', data: { labels: A.hours_by_workflow.map(function (w) { return w.name; }), datasets: [{ label: 'Hours saved', data: A.hours_by_workflow.map(function (w) { return w.value; }), backgroundColor: css('--c-realty'), ...rightRound, barThickness: 16 }] },
+          options: baseOptions({ indexAxis: 'y', interaction: { axis: 'y' }, scales: { y: { grid: { display: false }, ticks: { color: css('--text-2') } } } }) });
+        mk('a-wk', { type: 'bar', data: { labels: A.hours_weekly.map(function (w) { return shortDate(w.week); }), datasets: [{ label: 'Hours saved', data: A.hours_weekly.map(function (w) { return w.hours; }), backgroundColor: css('--c-realty'), ...topRound, maxBarThickness: 22 }] },
+          options: baseOptions({}) });
+      }
+    };
+  }
+  function addDays(d, n) { var t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); }
+
+  /* ---------- shell ---------- */
+  function renderTabs() {
+    $('#tabs').innerHTML = TABS.map(function (t) {
+      var sw = t.color ? 'style="background:var(' + t.color + ')"' : '';
+      return '<button class="tab" role="tab" data-tab="' + t.id + '" aria-selected="' + (t.id === state.tab) + '"><i ' + sw + '></i>' + esc(t.label) + '</button>';
+    }).join('');
+    document.querySelectorAll('.tab').forEach(function (b) {
+      b.addEventListener('click', function () { state.tab = b.getAttribute('data-tab'); try { history.replaceState(null, '', '#' + state.tab); } catch (e) {} render(); });
+    });
+  }
+  function render() {
+    if (!state.data) return;
+    destroyCharts(); renderTabs();
+    var D = state.data, v = state.tab === 'group' ? groupView(D) : state.tab === 'automation' ? automationView(D) : businessView(D, state.tab);
+    $('#view').innerHTML = v.html; v.draw(); wireTables();
+  }
+  function ago(iso) {
+    var s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (s < 90) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + ' h ago';
+    return Math.round(s / 86400) + ' days ago';
+  }
+  function updateStatus() {
+    var D = state.data, dot = $('#statusPill .dot'), t = $('#statusText');
+    if (!D) return;
+    var age = (Date.now() - new Date(D.generated_at).getTime()) / 36e5;
+    if (state.usingSample) { dot.className = 'dot sample'; t.textContent = 'Bundled sample data · ' + shortDate(D.ref_date); }
+    else if (age > 3) { dot.className = 'dot stale'; t.textContent = 'Last synced ' + ago(D.generated_at); }
+    else { dot.className = 'dot live'; t.textContent = 'Live · synced ' + ago(D.generated_at); }
+    $('#footL').textContent = 'Window: ' + shortDate(D.window.from) + ' to ' + shortDate(D.window.to) + ' · automations launched ' + shortDate(D.go_live);
+  }
+  function load(first) {
+    return fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { state.usingSample = false; return d; })
+      .catch(function () { state.usingSample = true; return JSON.parse($('#sample').textContent); })
+      .then(function (d) {
+        var changed = !state.data || state.data.generated_at !== d.generated_at;
+        state.data = d; updateStatus(); if (changed || first) render();
+      });
+  }
+  function boot() {
+    var h = (location.hash || '').replace('#', '');
+    if (TABS.some(function (t) { return t.id === h; })) state.tab = h;
+    $('#themeBtn').addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      render();
+    });
+    try { var s = localStorage.getItem('theme'); if (s) document.documentElement.setAttribute('data-theme', s); } catch (e) {}
+    var go = function () { load(true); setInterval(function () { load(false); }, REFRESH_MS); setInterval(updateStatus, 30000); };
+    if (window.Chart) go(); else window.addEventListener('load', go);
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
