@@ -1,1 +1,951 @@
-{}
+{
+  "generated_at": "2026-10-19T12:16:20.709Z",
+  "ref_date": "2026-10-19",
+  "window": {
+    "from": "2026-09-20",
+    "to": "2026-10-19",
+    "days": 30
+  },
+  "go_live": "2026-09-05",
+  "data_note": "Synthetic demo data",
+  "group": {
+    "kpis": {
+      "revenue": 1032824,
+      "revenue_change_pct": 27.8,
+      "orders": 575,
+      "leads": 0,
+      "net_cash": 510452,
+      "first_response_min": 0
+    },
+    "daily_revenue": [
+      {
+        "date": "2026-09-20",
+        "realty": 0,
+        "store": 4712,
+        "agency": 0
+      },
+      {
+        "date": "2026-09-21",
+        "realty": 26335,
+        "store": 4352,
+        "agency": 5500
+      },
+      {
+        "date": "2026-09-22",
+        "realty": 0,
+        "store": 5769,
+        "agency": 15000
+      },
+      {
+        "date": "2026-09-23",
+        "realty": 19761,
+        "store": 6461,
+        "agency": 15000
+      },
+      {
+        "date": "2026-09-24",
+        "realty": 20522,
+        "store": 6468,
+        "agency": 50000
+      },
+      {
+        "date": "2026-09-25",
+        "realty": 0,
+        "store": 5082,
+        "agency": 0
+      },
+      {
+        "date": "2026-09-26",
+        "realty": 0,
+        "store": 5790,
+        "agency": 0
+      },
+      {
+        "date": "2026-09-27",
+        "realty": 0,
+        "store": 5736,
+        "agency": 0
+      },
+      {
+        "date": "2026-09-28",
+        "realty": 65735,
+        "store": 4886,
+        "agency": 8000
+      },
+      {
+        "date": "2026-09-29",
+        "realty": 49230,
+        "store": 4380,
+        "agency": 28000
+      },
+      {
+        "date": "2026-09-30",
+        "realty": 0,
+        "store": 5424,
+        "agency": 13500
+      },
+      {
+        "date": "2026-10-01",
+        "realty": 0,
+        "store": 6532,
+        "agency": 62000
+      },
+      {
+        "date": "2026-10-02",
+        "realty": 0,
+        "store": 4945,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-03",
+        "realty": 0,
+        "store": 5831,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-04",
+        "realty": 0,
+        "store": 4459,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-05",
+        "realty": 0,
+        "store": 5248,
+        "agency": 94000
+      },
+      {
+        "date": "2026-10-06",
+        "realty": 51907,
+        "store": 6514,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-07",
+        "realty": 0,
+        "store": 4592,
+        "agency": 15000
+      },
+      {
+        "date": "2026-10-08",
+        "realty": 36976,
+        "store": 5934,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-09",
+        "realty": 36878,
+        "store": 3855,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-10",
+        "realty": 18063,
+        "store": 6619,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-11",
+        "realty": 0,
+        "store": 7551,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-12",
+        "realty": 29114,
+        "store": 5636,
+        "agency": 47000
+      },
+      {
+        "date": "2026-10-13",
+        "realty": 25644,
+        "store": 6492,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-14",
+        "realty": 0,
+        "store": 5708,
+        "agency": 8000
+      },
+      {
+        "date": "2026-10-15",
+        "realty": 86440,
+        "store": 3849,
+        "agency": 23000
+      },
+      {
+        "date": "2026-10-16",
+        "realty": 0,
+        "store": 5608,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-17",
+        "realty": 0,
+        "store": 5289,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-18",
+        "realty": 18379,
+        "store": 3312,
+        "agency": 0
+      },
+      {
+        "date": "2026-10-19",
+        "realty": 0,
+        "store": 6804,
+        "agency": 0
+      }
+    ],
+    "revenue_share": [
+      {
+        "key": "realty",
+        "name": "Palm & Co Realty",
+        "value": 484984
+      },
+      {
+        "key": "store",
+        "name": "Oasis Home Store",
+        "value": 163840
+      },
+      {
+        "key": "agency",
+        "name": "Pixel Bridge Agency",
+        "value": 384000
+      }
+    ],
+    "net_cash_by_business": [
+      {
+        "key": "realty",
+        "name": "Palm & Co Realty",
+        "value": 282139
+      },
+      {
+        "key": "store",
+        "name": "Oasis Home Store",
+        "value": 20313
+      },
+      {
+        "key": "agency",
+        "name": "Pixel Bridge Agency",
+        "value": 208000
+      }
+    ],
+    "automation": {
+      "hours_saved_30d": 98,
+      "hours_saved_total": 139,
+      "runs_total": 1420,
+      "hours_by_workflow": [
+        {
+          "name": "lead-qualifier",
+          "value": 88.4
+        },
+        {
+          "name": "kpi-sync",
+          "value": 15
+        },
+        {
+          "name": "support-agent",
+          "value": 11.3
+        },
+        {
+          "name": "order-inventory-bot",
+          "value": 10.2
+        },
+        {
+          "name": "staff-assistant",
+          "value": 9.2
+        },
+        {
+          "name": "weekly-summary",
+          "value": 5.3
+        }
+      ],
+      "hours_weekly": [
+        {
+          "week": "2026-08-25",
+          "hours": 0
+        },
+        {
+          "week": "2026-09-01",
+          "hours": 9
+        },
+        {
+          "week": "2026-09-08",
+          "hours": 17.6
+        },
+        {
+          "week": "2026-09-15",
+          "hours": 20.5
+        },
+        {
+          "week": "2026-09-22",
+          "hours": 22.7
+        },
+        {
+          "week": "2026-09-29",
+          "hours": 21.8
+        },
+        {
+          "week": "2026-10-06",
+          "hours": 25.8
+        },
+        {
+          "week": "2026-10-13",
+          "hours": 22.1
+        }
+      ],
+      "first_response_trend": [
+        {
+          "week": "2026-07-21",
+          "minutes": 0
+        },
+        {
+          "week": "2026-07-28",
+          "minutes": 0
+        },
+        {
+          "week": "2026-08-04",
+          "minutes": 0
+        },
+        {
+          "week": "2026-08-11",
+          "minutes": 0
+        },
+        {
+          "week": "2026-08-18",
+          "minutes": 0
+        },
+        {
+          "week": "2026-08-25",
+          "minutes": 0
+        },
+        {
+          "week": "2026-09-01",
+          "minutes": 0
+        },
+        {
+          "week": "2026-09-08",
+          "minutes": 0
+        },
+        {
+          "week": "2026-09-15",
+          "minutes": 0
+        },
+        {
+          "week": "2026-09-22",
+          "minutes": 0
+        },
+        {
+          "week": "2026-09-29",
+          "minutes": 0
+        },
+        {
+          "week": "2026-10-06",
+          "minutes": 0
+        },
+        {
+          "week": "2026-10-13",
+          "minutes": 0
+        }
+      ],
+      "first_response_before_min": 0,
+      "first_response_after_min": 0,
+      "tickets_30d": 153,
+      "agent_share_pct": 76.5,
+      "human_response_before_sec": 4685,
+      "human_response_after_sec": 1071,
+      "agent_response_sec": 8.5,
+      "processes_live": 8,
+      "processes_total": 15,
+      "register_hours_saved_live": 169,
+      "register_hours_open": 69,
+      "top_processes": [
+        {
+          "id": "P01",
+          "business": "realty",
+          "process": "Qualify inbound property leads",
+          "manual_hours": 52,
+          "saveable_hours": 52,
+          "feasibility": 5,
+          "status": "Live",
+          "automated_by": "lead-qualifier"
+        },
+        {
+          "id": "P06",
+          "business": "store",
+          "process": "Answer product and policy FAQs",
+          "manual_hours": 32,
+          "saveable_hours": 32,
+          "feasibility": 5,
+          "status": "Live",
+          "automated_by": "support-agent"
+        },
+        {
+          "id": "P05",
+          "business": "store",
+          "process": "Answer order-status questions",
+          "manual_hours": 30,
+          "saveable_hours": 30,
+          "feasibility": 5,
+          "status": "Live",
+          "automated_by": "order-inventory-bot"
+        },
+        {
+          "id": "P10",
+          "business": "agency",
+          "process": "Compile client weekly status reports",
+          "manual_hours": 32,
+          "saveable_hours": 25.6,
+          "feasibility": 4,
+          "status": "Planned",
+          "automated_by": ""
+        },
+        {
+          "id": "P08",
+          "business": "store",
+          "process": "Copy daily sales into the finance sheet",
+          "manual_hours": 17.5,
+          "saveable_hours": 17.5,
+          "feasibility": 5,
+          "status": "Live",
+          "automated_by": "kpi-sync"
+        },
+        {
+          "id": "P07",
+          "business": "store",
+          "process": "Check stock against reorder levels",
+          "manual_hours": 14.7,
+          "saveable_hours": 14.7,
+          "feasibility": 5,
+          "status": "Planned",
+          "automated_by": ""
+        },
+        {
+          "id": "P14",
+          "business": "group",
+          "process": "Month-end group reporting",
+          "manual_hours": 16,
+          "saveable_hours": 12.8,
+          "feasibility": 4,
+          "status": "Live",
+          "automated_by": "kpi-sync"
+        }
+      ]
+    }
+  },
+  "businesses": {
+    "realty": {
+      "name": "Palm & Co Realty",
+      "tag": "Real estate",
+      "kpis": {
+        "revenue": 484984,
+        "revenue_change_pct": 14.1,
+        "orders": 16,
+        "orders_change_pct": 0,
+        "avg_order_value": 30311,
+        "leads": 0,
+        "leads_change_pct": null,
+        "conversion_pct": 0,
+        "first_response_min": 0,
+        "net_cash": 282139,
+        "income": 484984,
+        "expense": 202844
+      },
+      "daily_revenue": [
+        0,
+        26335,
+        0,
+        19761,
+        20522,
+        0,
+        0,
+        0,
+        65735,
+        49230,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        51907,
+        0,
+        36976,
+        36878,
+        18063,
+        0,
+        29114,
+        25644,
+        0,
+        86440,
+        0,
+        0,
+        18379,
+        0
+      ],
+      "cash_weekly": [
+        {
+          "week": "2026-08-25",
+          "income": 100081,
+          "expense": 100895
+        },
+        {
+          "week": "2026-09-01",
+          "income": 139435,
+          "expense": 44629
+        },
+        {
+          "week": "2026-09-08",
+          "income": 84365,
+          "expense": 23417
+        },
+        {
+          "week": "2026-09-15",
+          "income": 85413,
+          "expense": 24692
+        },
+        {
+          "week": "2026-09-22",
+          "income": 106018,
+          "expense": 102121
+        },
+        {
+          "week": "2026-09-29",
+          "income": 49230,
+          "expense": 43314
+        },
+        {
+          "week": "2026-10-06",
+          "income": 172938,
+          "expense": 22678
+        },
+        {
+          "week": "2026-10-13",
+          "income": 130463,
+          "expense": 24589
+        }
+      ],
+      "expense_by_category": [
+        {
+          "name": "Salaries",
+          "value": 78000
+        },
+        {
+          "name": "Marketing",
+          "value": 70344
+        },
+        {
+          "name": "Portal fees",
+          "value": 32500
+        },
+        {
+          "name": "Rent",
+          "value": 22000
+        }
+      ],
+      "leads_by_score": [
+        {
+          "name": "Hot",
+          "value": 0
+        },
+        {
+          "name": "Warm",
+          "value": 0
+        },
+        {
+          "name": "Cold",
+          "value": 0
+        }
+      ],
+      "leads_by_source": [],
+      "leads_by_status": [],
+      "team": [
+        {
+          "name": "Yusuf R.",
+          "tasks": 200,
+          "response_min": 23.9,
+          "csat": 4.42
+        },
+        {
+          "name": "Omar K.",
+          "tasks": 178,
+          "response_min": 30.2,
+          "csat": 4.55
+        },
+        {
+          "name": "Hana S.",
+          "tasks": 173,
+          "response_min": 28.4,
+          "csat": 4.39
+        },
+        {
+          "name": "Layla M.",
+          "tasks": 168,
+          "response_min": 25.5,
+          "csat": 4.39
+        }
+      ],
+      "tickets": {
+        "total": 47,
+        "agent_share_pct": 83,
+        "agent_response_sec": 8.7,
+        "human_response_sec": 1321
+      }
+    },
+    "store": {
+      "name": "Oasis Home Store",
+      "tag": "Online store",
+      "kpis": {
+        "revenue": 163840,
+        "revenue_change_pct": 23,
+        "orders": 537,
+        "orders_change_pct": 21.2,
+        "avg_order_value": 305,
+        "leads": 0,
+        "leads_change_pct": null,
+        "conversion_pct": 0,
+        "first_response_min": 0,
+        "net_cash": 20313,
+        "income": 163840,
+        "expense": 143526
+      },
+      "daily_revenue": [
+        4712,
+        4352,
+        5769,
+        6461,
+        6468,
+        5082,
+        5790,
+        5736,
+        4886,
+        4380,
+        5424,
+        6532,
+        4945,
+        5831,
+        4459,
+        5248,
+        6514,
+        4592,
+        5934,
+        3855,
+        6619,
+        7551,
+        5636,
+        6492,
+        5708,
+        3849,
+        5608,
+        5289,
+        3312,
+        6804
+      ],
+      "cash_weekly": [
+        {
+          "week": "2026-08-25",
+          "income": 34200,
+          "expense": 49269
+        },
+        {
+          "week": "2026-09-01",
+          "income": 29954,
+          "expense": 28499
+        },
+        {
+          "week": "2026-09-08",
+          "income": 29066,
+          "expense": 20291
+        },
+        {
+          "week": "2026-09-15",
+          "income": 28938,
+          "expense": 20493
+        },
+        {
+          "week": "2026-09-22",
+          "income": 40193,
+          "expense": 52414
+        },
+        {
+          "week": "2026-09-29",
+          "income": 36819,
+          "expense": 32885
+        },
+        {
+          "week": "2026-10-06",
+          "income": 40701,
+          "expense": 26995
+        },
+        {
+          "week": "2026-10-13",
+          "income": 37063,
+          "expense": 24980
+        }
+      ],
+      "expense_by_category": [
+        {
+          "name": "Cost of goods",
+          "value": 87341
+        },
+        {
+          "name": "Salaries",
+          "value": 26000
+        },
+        {
+          "name": "Advertising",
+          "value": 17346
+        },
+        {
+          "name": "Rent",
+          "value": 8000
+        },
+        {
+          "name": "Shipping",
+          "value": 4840
+        }
+      ],
+      "leads_by_score": [
+        {
+          "name": "Hot",
+          "value": 0
+        },
+        {
+          "name": "Warm",
+          "value": 0
+        },
+        {
+          "name": "Cold",
+          "value": 0
+        }
+      ],
+      "leads_by_source": [],
+      "leads_by_status": [],
+      "team": [
+        {
+          "name": "Dina A.",
+          "tasks": 205,
+          "response_min": 28.9,
+          "csat": 4.81
+        },
+        {
+          "name": "Rami T.",
+          "tasks": 189,
+          "response_min": 26.6,
+          "csat": 4.53
+        },
+        {
+          "name": "Noor B.",
+          "tasks": 177,
+          "response_min": 25.7,
+          "csat": 4.49
+        },
+        {
+          "name": "Sami H.",
+          "tasks": 169,
+          "response_min": 30.9,
+          "csat": 4.44
+        }
+      ],
+      "tickets": {
+        "total": 86,
+        "agent_share_pct": 75.6,
+        "agent_response_sec": 8.7,
+        "human_response_sec": 1116
+      },
+      "low_stock": [
+        {
+          "sku": "SKU-116",
+          "product": "Wooden serving tray",
+          "stock": 3,
+          "reorder_level": 15
+        },
+        {
+          "sku": "SKU-102",
+          "product": "Ceramic vase, sand",
+          "stock": 18,
+          "reorder_level": 25
+        },
+        {
+          "sku": "SKU-113",
+          "product": "Floor lamp, matte black",
+          "stock": 7,
+          "reorder_level": 12
+        },
+        {
+          "sku": "SKU-106",
+          "product": "Brass table lamp",
+          "stock": 14,
+          "reorder_level": 15
+        },
+        {
+          "sku": "SKU-110",
+          "product": "Rattan lounge chair",
+          "stock": 6,
+          "reorder_level": 6
+        }
+      ]
+    },
+    "agency": {
+      "name": "Pixel Bridge Agency",
+      "tag": "Services",
+      "kpis": {
+        "revenue": 384000,
+        "revenue_change_pct": 53.6,
+        "orders": 22,
+        "orders_change_pct": 46.7,
+        "avg_order_value": 17455,
+        "leads": 0,
+        "leads_change_pct": null,
+        "conversion_pct": 0,
+        "first_response_min": 0,
+        "net_cash": 208000,
+        "income": 384000,
+        "expense": 176000
+      },
+      "daily_revenue": [
+        0,
+        5500,
+        15000,
+        15000,
+        50000,
+        0,
+        0,
+        0,
+        8000,
+        28000,
+        13500,
+        62000,
+        0,
+        0,
+        0,
+        94000,
+        0,
+        15000,
+        0,
+        0,
+        0,
+        0,
+        47000,
+        0,
+        8000,
+        23000,
+        0,
+        0,
+        0,
+        0
+      ],
+      "cash_weekly": [
+        {
+          "week": "2026-08-25",
+          "income": 27000,
+          "expense": 121800
+        },
+        {
+          "week": "2026-09-01",
+          "income": 42000,
+          "expense": 32800
+        },
+        {
+          "week": "2026-09-08",
+          "income": 153500,
+          "expense": 1800
+        },
+        {
+          "week": "2026-09-15",
+          "income": 27500,
+          "expense": 17800
+        },
+        {
+          "week": "2026-09-22",
+          "income": 88000,
+          "expense": 121800
+        },
+        {
+          "week": "2026-09-29",
+          "income": 197500,
+          "expense": 32800
+        },
+        {
+          "week": "2026-10-06",
+          "income": 62000,
+          "expense": 1800
+        },
+        {
+          "week": "2026-10-13",
+          "income": 31000,
+          "expense": 17800
+        }
+      ],
+      "expense_by_category": [
+        {
+          "name": "Salaries",
+          "value": 120000
+        },
+        {
+          "name": "Contractors",
+          "value": 32000
+        },
+        {
+          "name": "Rent",
+          "value": 15000
+        },
+        {
+          "name": "Software",
+          "value": 9000
+        }
+      ],
+      "leads_by_score": [
+        {
+          "name": "Hot",
+          "value": 0
+        },
+        {
+          "name": "Warm",
+          "value": 0
+        },
+        {
+          "name": "Cold",
+          "value": 0
+        }
+      ],
+      "leads_by_source": [],
+      "leads_by_status": [],
+      "team": [
+        {
+          "name": "Karim D.",
+          "tasks": 197,
+          "response_min": 27.6,
+          "csat": 4.38
+        },
+        {
+          "name": "Maya L.",
+          "tasks": 192,
+          "response_min": 22.3,
+          "csat": 4.46
+        },
+        {
+          "name": "Tariq N.",
+          "tasks": 180,
+          "response_min": 24.8,
+          "csat": 4.33
+        },
+        {
+          "name": "Reem F.",
+          "tasks": 178,
+          "response_min": 25.8,
+          "csat": 4.36
+        }
+      ],
+      "tickets": {
+        "total": 20,
+        "agent_share_pct": 65,
+        "agent_response_sec": 8.3,
+        "human_response_sec": 1034
+      }
+    }
+  }
+}
