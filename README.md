@@ -36,14 +36,14 @@ Results:
 Disclaimer - The business data is synthetic: 90 days of sample records produced by tools/generate_data.py. The workflows themselves ran for real on test messages, but the volumes and the before-and-after figures on the dashboard are simulated to demonstrate the method. The manual times below are typical estimates, not measurements. I did not time people doing these tasks.
 
 Estimated time per task, manual versus automated
-________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________
 |Task	                                                   |Typical manual time|	Automated time (n8n execution duration)|
-|----------------------------------------------------------------------------------------------------------------------|
-|Answer a stock or order-status question                 |	about 3 min      | 	secs                                   | 
-|Answer a common FAQ question	                           |  about 4 min      |	secs                                   |
-|Compile a weekly management report from three sheets    |	about 45 min     |	secs                                   |
-|Qualify one new lead (read, extract, score, log, notify)|	about 6 min      |  secs                                   |	
-------------------------------------------------------------------------------------------------------------------------
+|-------------------------------------------------------------------------------------------------------------------
+|Answer a stock or order-status question                 |	about 3 min      | 	1.56 secs                        
+|Answer a common FAQ question	                         |  about 4 min          |	1.307 secs                        
+|Compile a weekly management report from three sheets    |	about 45 min     |	2.34 secs                        
+|Qualify one new lead (read, extract, score, log, notify)|	about 6 min      |      1.73 secs                            	
+--------------------------------------------------------------------------------------------------------------------
 The manual column uses the same minutes the Ledger uses (3, 4, 45 and 6), so the dashboard's "hours saved" is internally consistent. Each of these is an assumption you can change in one place: the minutes_saved value in the Ledger node.
 
 What these assumptions imply (illustrative scenario)
