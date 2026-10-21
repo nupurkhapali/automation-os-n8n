@@ -1,0 +1,928 @@
+{
+  "name": "02 - Customer bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "ebb5ad9a-5cc5-4c49-9566-f3c634e5a250",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "4ad21ecf-d965-4dce-9e86-fe23268082af",
+      "credentials": {
+        "telegramApi": {
+          "id": "BQgogbvpkH1bZeZr",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const m = $('Telegram Trigger').first().json.message;\nconst text = (m.text || '').trim();\nlet route = 'support', sku = '', order = '';\nconst s = text.match(/sku[-\\s]?(\\d+)/i);\nconst o = text.match(/(?:ord[-\\s]?|order\\s*#?\\s*)(\\d{4})/i);\nif (s) { route = 'inventory'; sku = 'SKU-' + s[1]; }\nelse if (o) { route = 'order'; order = 'ORD-' + o[1]; }\nreturn [{ json: { route, sku, order, text, chat_id: m.chat.id, sent_at: m.date, first_name: (m.from && m.from.first_name) || '' } }];"
+      },
+      "id": "5c5609c1-f063-4977-a79c-09f375b131c4",
+      "name": "Route",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "inventory",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "df5c14e6-9036-4201-a190-46391166c28a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "540929b8-c961-4851-ae70-5ee9eddd2d07",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "order",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ac91204e-50f4-4a09-ab6e-2e7d49cf2b08",
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "912d7393-98f4-411e-a636-58a104c94bda",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 736270946,
+          "mode": "list",
+          "cachedResultName": "inventory",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "sku",
+              "lookupValue": "={{ $json.sku }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b86d4541-668a-4ca2-8f20-bdc8947bf93b",
+      "name": "Get row(s) in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        656,
+        -112
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $('Route').first().json;\nconst r = $input.first().json;\nlet reply;\nif (!r.sku) reply = \"I couldn't find \" + q.sku + '. Please check the code, for example SKU-102.';\nelse {\n  const low = Number(r.stock) <= Number(r.reorder_level);\n  reply = r.product + ' (' + r.sku + ')\\nIn stock: ' + r.stock + ' units\\nPrice: AED ' + r.price_aed + (low ? '\\nLow stock: reorder in progress.' : '');\n}\nreturn [{ json: { reply, chat_id: q.chat_id, sent_at: q.sent_at, workflow: 'order-inventory-bot', business: 'store', minutes_saved: 3, handled_by: 'agent', question: q.text } }];"
+      },
+      "id": "2ec1f7cf-666f-4ad7-b07f-241156b82847",
+      "name": "Format stock reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// The Slack handoff step replaces the item with Slack's own response,\n// so fall back to the Parse answer data when chat_id is missing.\nconst incoming = $input.first().json;\nconst j = incoming.chat_id !== undefined ? incoming : $('Parse answer').first().json;\nconst q = $('Route').first().json;\nreturn [{ json: {\n  reply: j.reply,\n  chat_id: j.chat_id,\n  question: j.question,\n  handled_by: j.handled_by,\n  handoff: j.handoff === true || j.handled_by === 'human',\n  workflow: j.workflow,\n  business: j.business,\n  minutes_saved: j.minutes_saved,\n  sent_at: j.sent_at,\n  response_sec: Math.max(1, Math.round(Date.now() / 1000 - q.sent_at))\n} }];"
+      },
+      "id": "31587669-623d-437f-a422-ac299e8bf4ad",
+      "name": "Response time",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2112,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Response time').item.json.chat_id }}",
+        "text": "={{ $('Response time').item.json.reply }}",
+        "additionalFields": {}
+      },
+      "id": "ef92d91a-d9d2-41f3-bf65-51a1fb0c3712",
+      "name": "Send a text message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2336,
+        64
+      ],
+      "webhookId": "0303b39a-93ae-4fde-9cb0-6f3248011dcd",
+      "credentials": {
+        "telegramApi": {
+          "id": "BQgogbvpkH1bZeZr",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1393020939,
+          "mode": "list",
+          "cachedResultName": "tickets",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket_id": "=T-{{ Date.now().toString().slice(-6) }}",
+            "date": "={{ $now.format('yyyy-MM-dd') }}",
+            "business": "store",
+            "channel": "Telegram",
+            "question": "={{ $('Response time').item.json.question }}",
+            "handled_by": "={{ $('Response time').item.json.handled_by }}",
+            "response_sec": "=\t{{ $('Response time').item.json.response_sec }}",
+            "resolved": "yes",
+            "handoff": "={{ $('Response time').item.json.handled_by === 'human' ? 'yes' : 'no' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticket_id",
+              "displayName": "ticket_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business",
+              "displayName": "business",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "handled_by",
+              "displayName": "handled_by",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "response_sec",
+              "displayName": "response_sec",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resolved",
+              "displayName": "resolved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "handoff",
+              "displayName": "handoff",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ddc54771-5978-4871-985a-6e6a296e5535",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2560,
+        64
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2102061425,
+          "mode": "list",
+          "cachedResultName": "transactions",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ref",
+              "lookupValue": "={{ $json.order }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "68d81e55-728f-496a-8529-b95fb7e81053",
+      "name": "Get row(s) in sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        656,
+        16
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $('Route').first().json;\nconst r = $input.first().json;\nlet reply;\nif (!r.ref) reply = \"I couldn't find order \" + q.order + '. Please check the number.';\nelse reply = 'Order ' + r.ref + '\\nStatus: ' + r.status + '\\nPlaced: ' + r.date + '\\nTotal: AED ' + r.amount_aed;\nreturn [{ json: { reply, chat_id: q.chat_id, sent_at: q.sent_at, workflow: 'order-inventory-bot', business: 'store', minutes_saved: 3, handled_by: 'agent', question: q.text } }];"
+      },
+      "id": "6f52d17b-580d-476b-b69c-4c8499b22a13",
+      "name": "Format order reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 571037707,
+          "mode": "list",
+          "cachedResultName": "faq",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "business",
+              "lookupValue": "store"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "494284a1-5f15-4d12-8d69-5f9529a4a865",
+      "name": "Get row(s) in sheet2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        160
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const faq = $input.all().map((i) => 'Q: ' + i.json.question + '\\nA: ' + i.json.answer).join('\\n\\n');\nreturn [{ json: { faq } }];"
+      },
+      "id": "10004ffc-694d-4403-ac91-7f7f6ea58171",
+      "name": "Build context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Route').first().json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are the customer support assistant for Oasis Home Store, a fictional online store.\nAnswer ONLY using the FAQ below. Keep it under 60 words, friendly and plain.\nReply in the same language as the customer (English or Arabic).\nIf the FAQ does not cover the question, or the customer is upset, or the issue involves a\nrefund dispute or payment problem, set \"handoff\" to true and say a teammate will follow up.\nReturn ONLY JSON: {\"answer\": \"...\", \"handoff\": true or false}\n\nFAQ:\n{{ $json.faq }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "1aa03b8f-5a51-4b67-8532-19dd0bcfc2ca",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1056,
+        160
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "58c14ee5-c40c-4739-b07c-b4b6265f3906",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        992,
+        368
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "hZHmoyc8OKzXDWW8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const q = $('Route').first().json;\nconst raw = $input.first().json.text || '';\nlet d;\ntry { d = JSON.parse(raw.replace(/\\x60\\x60\\x60json|\\x60\\x60\\x60/g, '').trim()); } catch (e) { d = { answer: 'Thanks for your message. A teammate will follow up shortly.', handoff: true }; }\nconst handoff = d.handoff === true;\nreturn [{ json: { reply: d.answer, handoff, chat_id: q.chat_id, sent_at: q.sent_at, workflow: 'support-agent', business: 'store', minutes_saved: handoff ? 0 : 4, handled_by: handoff ? 'human' : 'agent', question: q.text } }];"
+      },
+      "id": "9f756634-4e15-474b-a67f-0c095723fe52",
+      "name": "Parse answer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b56bbaad-657f-4214-a68e-f1c0f7d492db",
+              "leftValue": "={{ $json.handoff }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f6778253-092e-40f6-9366-32674be654fb",
+      "name": "Handoff?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1648,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "slack-account",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: '🙋 Support handoff needed: \"' + $json.question + '\" (chat ' + $json.chat_id + ')' }) }}",
+        "options": {}
+      },
+      "id": "dbea9432-e94c-4724-a545-5dcc980adbb5",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1872,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c6d98452-9e61-4207-a0f9-b2fe5fa73239",
+              "leftValue": "={{ $('Response time').item.json.minutes_saved }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2784,
+        64
+      ],
+      "id": "afedd2d5-68be-4f99-9e69-e9e98032f14b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1807957973,
+          "mode": "list",
+          "cachedResultName": "ledger",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+            "date": "={{ $now.format('yyyy-MM-dd') }}",
+            "workflow": "={{ $('Response time').item.json.workflow }}",
+            "business": "store",
+            "minutes_saved": "={{ $('Response time').item.json.minutes_saved }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflow",
+              "displayName": "workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business",
+              "displayName": "business",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "minutes_saved",
+              "displayName": "minutes_saved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3008,
+        -32
+      ],
+      "id": "787f94ed-bffd-4aa5-98de-21b9166a6a77",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Format stock reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format stock reply": {
+      "main": [
+        [
+          {
+            "node": "Response time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response time": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Format order reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format order reply": {
+      "main": [
+        [
+          {
+            "node": "Response time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Build context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build context": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Parse answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse answer": {
+      "main": [
+        [
+          {
+            "node": "Handoff?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handoff?": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Response time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ce09f5c2-f5bb-4016-af2e-d7665db08e94",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81b4d1b9bbae33117cc3eb140f18c848d631315478d02e6c75be6ae2dced50ef"
+  },
+  "nodeGroups": [],
+  "id": "xeSHFAFWVGTQ7n45",
+  "tags": []
+}
