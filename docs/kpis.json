@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T12:00:22.084Z",
+  "generated_at": "2026-10-21T12:30:19.915Z",
   "ref_date": "2026-10-19",
   "window": {
     "from": "2026-09-20",
@@ -236,7 +236,7 @@
     "automation": {
       "hours_saved_30d": 98,
       "hours_saved_total": 141,
-      "runs_total": 1426,
+      "runs_total": 1427,
       "hours_by_workflow": [
         {
           "name": "lead-qualifier",
@@ -357,7 +357,7 @@
       "agent_share_pct": 76.5,
       "human_response_before_sec": 4685,
       "human_response_after_sec": 1055,
-      "agent_response_sec": 8.5,
+      "agent_response_sec": 8.4,
       "processes_live": 8,
       "processes_total": 15,
       "register_hours_saved_live": 169,
