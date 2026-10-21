@@ -1,0 +1,485 @@
+{
+  "name": "01 - KPI sync",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "fe160462-4703-4193-b6a5-f3b3ea248c72",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2102061425,
+          "mode": "list",
+          "cachedResultName": "transactions",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "options": {}
+      },
+      "id": "382ad001-4955-4bd2-8da7-38a6d2a1ab27",
+      "name": "Get transactions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1395510697,
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "options": {}
+      },
+      "id": "23eb641f-e3d8-4226-9992-e2ad4c529c30",
+      "name": "Get leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1264286592,
+          "mode": "list",
+          "cachedResultName": "cashflow",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "options": {}
+      },
+      "id": "703de4a2-509b-40cc-b91f-b145b55a2e12",
+      "name": "Get cashflow",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        "sheetName": {
+          "__rl": true,
+          "value": 672912355,
+          "mode": "list",
+          "cachedResultName": "team",
+          "cachedResultUrl": "your-google-sheet"
+        "options": {}
+      },
+      "id": "b479b918-04a3-43ce-9660-986ac3280ea1",
+      "name": "Get team",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1393020939,
+          "mode": "list",
+          "cachedResultName": "tickets",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "options": {}
+      },
+      "id": "50b6f7be-a77c-4f81-86ef-7e4dbd7ddf55",
+      "name": "Get tickets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": ""your-google-sheet""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1807957973,
+          "mode": "list",
+          "cachedResultName": "ledger",
+          "cachedResultUrl": ""your-google-sheet"rF8mZDQQoAQyrvq8YLW7ieBo/edit#gid=1807957973"
+        },
+        "options": {}
+      },
+      "id": "ee059869-6e09-4180-8de4-fbf25b77c9df",
+      "name": "Get ledger",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1344,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": ""your-google-sheet""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 736270946,
+          "mode": "list",
+          "cachedResultName": "inventory",
+          "cachedResultUrl": ""your-google-sheet
+        },
+        "options": {}
+      },
+      "id": "32c982f1-1a90-4229-8d63-7761457de4a3",
+      "name": "Get inventory",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1504,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": ""your-google-sheet""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1332528881,
+          "mode": "list",
+          "cachedResultName": "processes",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "options": {}
+      },
+      "id": "ecaeeeed-1c66-4807-9cc0-a04978f9cf03",
+      "name": "Get processes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1664,
+        0
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const GO_LIVE = '2026-09-05';   // date the automations went live (for before/after charts)\n\nconst BIZ = {\n  realty: { name: 'Palm & Co Realty',    tag: 'Real estate' },\n  store:  { name: 'Oasis Home Store',    tag: 'Online store' },\n  agency: { name: 'Pixel Bridge Agency', tag: 'Services' },\n};\n\n// ---- read the sheets (node names must match exactly) ------------------------\nconst read = (name) => $(name).all().map((i) => i.json).filter((r) => Object.values(r).some((v) => String(v).trim() !== ''));\nconst tx      = read('Get transactions');\nconst leads   = read('Get leads');\nconst cash    = read('Get cashflow');\nconst team    = read('Get team');\nconst tickets = read('Get tickets');\nconst ledger  = read('Get ledger');\nconst stock   = read('Get inventory');\nconst procs   = read('Get processes');\n\n// ---- helpers ----------------------------------------------------------------\nconst num = (v) => Number(String(v ?? '').replace(/,/g, '')) || 0;\nconst iso = (v) => {\n  const s = String(v ?? '').trim().slice(0, 10);\n  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) {\n    throw new Error('Date \"' + v + '\" is not in YYYY-MM-DD format. Re-import the sheet with \"Convert text to numbers, dates and formulas\" switched OFF (GUIDE.md, step 1.3).');\n  }\n  return s;\n};\nconst addDays = (d, n) => {\n  const t = new Date(d + 'T00:00:00Z');\n  t.setUTCDate(t.getUTCDate() + n);\n  return t.toISOString().slice(0, 10);\n};\nconst sum = (a) => a.reduce((s, x) => s + x, 0);\nconst avg = (a) => (a.length ? sum(a) / a.length : 0);\nconst r0 = (x) => Math.round(x);\nconst r1 = (x) => Math.round(x * 10) / 10;\nconst r2 = (x) => Math.round(x * 100) / 100;\nconst pct = (cur, prev) => (prev ? r1(((cur - prev) / prev) * 100) : null);\nconst countBy = (rows, key) => {\n  const m = {};\n  rows.forEach((r) => { m[r[key]] = (m[r[key]] || 0) + 1; });\n  return m;\n};\nconst topN = (obj, n) => Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n).map(([k, v]) => ({ name: k, value: v }));\n\n// normalise types once\ntx.forEach((r) => { r.date = iso(r.date); r.amount = num(r.amount_aed); });\nleads.forEach((r) => { r.date = iso(r.date); r.fr = num(r.first_response_min); });\ncash.forEach((r) => { r.date = iso(r.date); r.amount = num(r.amount_aed); });\nteam.forEach((r) => { r.week = iso(r.week_start); });\ntickets.forEach((r) => { r.date = iso(r.date); r.sec = num(r.response_sec); });\nledger.forEach((r) => { r.date = iso(r.date); r.mins = num(r.minutes_saved); });\n\n// ---- time windows (anchored to the latest data date, so the dashboard never goes empty) ----\nconst ref = tx.map((r) => r.date).sort().pop();\nconst curFrom = addDays(ref, -29), prevFrom = addDays(ref, -59), prevTo = addDays(ref, -30);\nconst inCur = (d) => d >= curFrom && d <= ref;\nconst inPrev = (d) => d >= prevFrom && d <= prevTo;\nconst curDays = Array.from({ length: 30 }, (_, i) => addDays(curFrom, i));\nconst weekStarts = Array.from({ length: 8 }, (_, i) => addDays(ref, -7 * (8 - i) + 1)); // 8 rolling weeks\nconst weekOf = (d) => {\n  for (let i = weekStarts.length - 1; i >= 0; i--) if (d >= weekStarts[i]) return i;\n  return -1;\n};\n\n// ---- per-business block -----------------------------------------------------\nfunction business(key) {\n  const done = tx.filter((r) => r.business === key && r.status === 'completed');\n  const revCur = sum(done.filter((r) => inCur(r.date)).map((r) => r.amount));\n  const revPrev = sum(done.filter((r) => inPrev(r.date)).map((r) => r.amount));\n  const ordersCur = done.filter((r) => inCur(r.date)).length;\n  const ordersPrev = done.filter((r) => inPrev(r.date)).length;\n  const daily = curDays.map((d) => r0(sum(done.filter((r) => r.date === d).map((r) => r.amount))));\n\n  const L = leads.filter((r) => r.business === key && inCur(r.date));\n  const Lprev = leads.filter((r) => r.business === key && inPrev(r.date));\n  const won = L.filter((r) => r.status === 'won').length;\n\n  const C = cash.filter((r) => r.business === key);\n  const income = sum(C.filter((r) => r.type === 'income' && inCur(r.date)).map((r) => r.amount));\n  const expense = sum(C.filter((r) => r.type === 'expense' && inCur(r.date)).map((r) => r.amount));\n  const weekly = weekStarts.map(() => ({ income: 0, expense: 0 }));\n  C.forEach((r) => {\n    const w = weekOf(r.date);\n    if (w >= 0 && r.date <= ref) weekly[w][r.type] += r.amount;\n  });\n  const expByCat = {};\n  C.filter((r) => r.type === 'expense' && inCur(r.date)).forEach((r) => {\n    expByCat[r.category] = (expByCat[r.category] || 0) + r.amount;\n  });\n\n  const teamFrom = addDays(ref, -28);\n  const T = team.filter((r) => r.business === key && r.week >= teamFrom);\n  const people = [...new Set(T.map((r) => r.employee))].map((name) => {\n    const rows = T.filter((r) => r.employee === name);\n    return {\n      name,\n      tasks: r0(sum(rows.map((r) => num(r.tasks_completed)))),\n      response_min: r1(avg(rows.map((r) => num(r.avg_response_min)))),\n      csat: r2(avg(rows.map((r) => num(r.csat)))),\n    };\n  }).sort((a, b) => b.tasks - a.tasks);\n\n  const TK = tickets.filter((r) => r.business === key && inCur(r.date));\n  const agentTk = TK.filter((r) => r.handled_by === 'agent');\n  const humanTk = TK.filter((r) => r.handled_by === 'human');\n\n  const out = {\n    name: BIZ[key].name,\n    tag: BIZ[key].tag,\n    kpis: {\n      revenue: r0(revCur), revenue_change_pct: pct(revCur, revPrev),\n      orders: ordersCur, orders_change_pct: pct(ordersCur, ordersPrev),\n      avg_order_value: ordersCur ? r0(revCur / ordersCur) : 0,\n      leads: L.length, leads_change_pct: pct(L.length, Lprev.length),\n      conversion_pct: L.length ? r1((won / L.length) * 100) : 0,\n      first_response_min: r1(avg(L.map((r) => r.fr))),\n      net_cash: r0(income - expense), income: r0(income), expense: r0(expense),\n    },\n    daily_revenue: daily,\n    cash_weekly: weekStarts.map((w, i) => ({ week: w, income: r0(weekly[i].income), expense: r0(weekly[i].expense) })),\n    expense_by_category: topN(expByCat, 6).map((x) => ({ name: x.name, value: r0(x.value) })),\n    leads_by_score: ['Hot', 'Warm', 'Cold'].map((s) => ({ name: s, value: L.filter((r) => r.score === s).length })),\n    leads_by_source: topN(countBy(L, 'source'), 5),\n    leads_by_status: topN(countBy(L, 'status'), 5),\n    team: people,\n    tickets: {\n      total: TK.length,\n      agent_share_pct: TK.length ? r1((agentTk.length / TK.length) * 100) : 0,\n      agent_response_sec: r1(avg(agentTk.map((r) => r.sec))),\n      human_response_sec: r0(avg(humanTk.map((r) => r.sec))),\n    },\n  };\n  if (key === 'store') {\n    out.low_stock = stock\n      .map((r) => ({ sku: r.sku, product: r.product, stock: num(r.stock), reorder_level: num(r.reorder_level) }))\n      .filter((r) => r.stock <= r.reorder_level)\n      .sort((a, b) => (a.stock - a.reorder_level) - (b.stock - b.reorder_level))\n      .slice(0, 6);\n  }\n  return out;\n}\n\nconst businesses = {};\nObject.keys(BIZ).forEach((k) => { businesses[k] = business(k); });\n\n// ---- group block ------------------------------------------------------------\nconst keys = Object.keys(BIZ);\nconst gRev = sum(keys.map((k) => businesses[k].kpis.revenue));\nconst gPrev = sum(keys.map((k) => sum(tx.filter((r) => r.business === k && r.status === 'completed' && inPrev(r.date)).map((r) => r.amount))));\nconst gOrders = sum(keys.map((k) => businesses[k].kpis.orders));\nconst gLeads = sum(keys.map((k) => businesses[k].kpis.leads));\nconst gNet = sum(keys.map((k) => businesses[k].kpis.net_cash));\nconst allLeadsCur = leads.filter((r) => inCur(r.date));\n\n// first-response trend: rolling weeks over the last 13 weeks\nconst trendWeeks = Array.from({ length: 13 }, (_, i) => addDays(ref, -7 * (13 - i) + 1));\nconst frTrend = trendWeeks.map((w, i) => {\n  const end = i === 12 ? ref : addDays(trendWeeks[i + 1], -1);\n  const rows = leads.filter((r) => r.date >= w && r.date <= end);\n  return { week: w, minutes: r1(avg(rows.map((r) => r.fr))) };\n});\nconst before = leads.filter((r) => r.date < GO_LIVE);\nconst after = leads.filter((r) => r.date >= GO_LIVE);\nconst tkBefore = tickets.filter((r) => r.date < GO_LIVE && r.handled_by === 'human');\nconst tkAfterHuman = tickets.filter((r) => r.date >= GO_LIVE && r.handled_by === 'human');\nconst tkAfterAgent = tickets.filter((r) => r.date >= GO_LIVE && r.handled_by === 'agent');\nconst tkCur = tickets.filter((r) => inCur(r.date));\n\n// ledger: hours saved\nconst hoursBy = {};\nledger.forEach((r) => { hoursBy[r.workflow] = (hoursBy[r.workflow] || 0) + r.mins / 60; });\nconst hoursWeekly = weekStarts.map(() => 0);\nledger.forEach((r) => { const w = weekOf(r.date); if (w >= 0 && r.date <= ref) hoursWeekly[w] += r.mins / 60; });\n\n// process register\nconst P = procs.map((r) => ({\n  id: r.process_id, business: r.business, process: r.process,\n  manual_hours: r1(num(r.manual_hours_per_month)),\n  saveable_hours: r1(num(r.hours_saveable_per_month)),\n  feasibility: num(r.automation_feasibility), status: r.status, automated_by: r.automated_by || '',\n}));\nconst live = P.filter((p) => p.status === 'Live');\n\nconst kpis = {\n  generated_at: new Date().toISOString(),\n  ref_date: ref,\n  window: { from: curFrom, to: ref, days: 30 },\n  go_live: GO_LIVE,\n  data_note: 'Synthetic demo data',\n  group: {\n    kpis: {\n      revenue: gRev, revenue_change_pct: pct(gRev, gPrev),\n      orders: gOrders, leads: gLeads, net_cash: gNet,\n      first_response_min: r1(avg(allLeadsCur.map((r) => r.fr))),\n    },\n    daily_revenue: curDays.map((d, i) => ({ date: d, realty: businesses.realty.daily_revenue[i], store: businesses.store.daily_revenue[i], agency: businesses.agency.daily_revenue[i] })),\n    revenue_share: keys.map((k) => ({ key: k, name: BIZ[k].name, value: businesses[k].kpis.revenue })),\n    net_cash_by_business: keys.map((k) => ({ key: k, name: BIZ[k].name, value: businesses[k].kpis.net_cash })),\n    automation: {\n      hours_saved_30d: r0(sum(ledger.filter((r) => inCur(r.date)).map((r) => r.mins)) / 60),\n      hours_saved_total: r0(sum(ledger.map((r) => r.mins)) / 60),\n      runs_total: ledger.length,\n      hours_by_workflow: Object.entries(hoursBy).sort((a, b) => b[1] - a[1]).map(([w, h]) => ({ name: w, value: r1(h) })),\n      hours_weekly: weekStarts.map((w, i) => ({ week: w, hours: r1(hoursWeekly[i]) })),\n      first_response_trend: frTrend,\n      first_response_before_min: r1(avg(before.map((r) => r.fr))),\n      first_response_after_min: r1(avg(after.map((r) => r.fr))),\n      tickets_30d: tkCur.length,\n      agent_share_pct: tkCur.length ? r1((tkCur.filter((r) => r.handled_by === 'agent').length / tkCur.length) * 100) : 0,\n      human_response_before_sec: r0(avg(tkBefore.map((r) => r.sec))),\n      human_response_after_sec: r0(avg(tkAfterHuman.map((r) => r.sec))),\n      agent_response_sec: r1(avg(tkAfterAgent.map((r) => r.sec))),\n      processes_live: live.length,\n      processes_total: P.length,\n      register_hours_saved_live: r0(sum(live.map((p) => p.saveable_hours))),\n      register_hours_open: r0(sum(P.filter((p) => p.status !== 'Live').map((p) => p.saveable_hours))),\n      top_processes: [...P].sort((a, b) => b.saveable_hours - a.saveable_hours).slice(0, 7),\n    },\n  },\n  businesses,\n};\n\nreturn [{ json: kpis }];"
+      },
+      "id": "15454c2d-293d-42b3-bf25-ac8dc2ef000a",
+      "name": "Build KPIs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "nupurkhapali",
+          "mode": "list",
+          "cachedResultName": "nupurkhapali",
+          "cachedResultUrl": "https://github.com"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "automation-os-n8n",
+          "mode": "list",
+          "cachedResultName": "automation-os-n8n",
+          "cachedResultUrl": "https://github.com"
+        },
+        "filePath": "docs/kpis.json",
+        "fileContent": "={{ JSON.stringify($json, null, 2) }}",
+        "commitMessage": "chore: refresh kpis"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2112,
+        0
+      ],
+      "id": "f73cffba-a3c3-4e1a-8220-c03e090982a3",
+      "name": "Edit a file",
+      "webhookId": "4c36ab08-a8c8-48d7-9fa5-ef7e4fab0e4b",
+      "credentials": {
+        "githubApi": {
+          "id": "Zsz5CqeTwoicicdm",
+          "name": "GitHub account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get transactions": {
+      "main": [
+        [
+          {
+            "node": "Get leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get leads": {
+      "main": [
+        [
+          {
+            "node": "Get cashflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get cashflow": {
+      "main": [
+        [
+          {
+            "node": "Get team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get team": {
+      "main": [
+        [
+          {
+            "node": "Get tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get tickets": {
+      "main": [
+        [
+          {
+            "node": "Get ledger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ledger": {
+      "main": [
+        [
+          {
+            "node": "Get inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get inventory": {
+      "main": [
+        [
+          {
+            "node": "Get processes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get processes": {
+      "main": [
+        [
+          {
+            "node": "Build KPIs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build KPIs": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit a file": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2a806c04-9ff1-46c9-a7f7-7a2965217fe1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81b4d1b9bbae33117cc3eb140f18c848d631315478d02e6c75be6ae2dced50ef"
+  },
+  "nodeGroups": [],
+  "id": "PIXzxrNs9Ey4h98z",
+  "tags": []
+}
