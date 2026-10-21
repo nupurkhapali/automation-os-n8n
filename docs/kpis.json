@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T12:16:20.709Z",
+  "generated_at": "2026-10-21T11:36:05.371Z",
   "ref_date": "2026-10-19",
   "window": {
     "from": "2026-09-20",
@@ -235,8 +235,8 @@
     ],
     "automation": {
       "hours_saved_30d": 98,
-      "hours_saved_total": 139,
-      "runs_total": 1420,
+      "hours_saved_total": 141,
+      "runs_total": 1425,
       "hours_by_workflow": [
         {
           "name": "lead-qualifier",
@@ -248,11 +248,11 @@
         },
         {
           "name": "support-agent",
-          "value": 11.3
+          "value": 11.4
         },
         {
           "name": "order-inventory-bot",
-          "value": 10.2
+          "value": 10.3
         },
         {
           "name": "staff-assistant",
@@ -260,7 +260,7 @@
         },
         {
           "name": "weekly-summary",
-          "value": 5.3
+          "value": 6.8
         }
       ],
       "hours_weekly": [
@@ -356,7 +356,7 @@
       "tickets_30d": 153,
       "agent_share_pct": 76.5,
       "human_response_before_sec": 4685,
-      "human_response_after_sec": 1071,
+      "human_response_after_sec": 1055,
       "agent_response_sec": 8.5,
       "processes_live": 8,
       "processes_total": 15,
