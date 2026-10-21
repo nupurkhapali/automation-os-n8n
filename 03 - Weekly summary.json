@@ -1,0 +1,338 @@
+{
+  "name": "03 - Weekly summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "b2e741b6-cd2b-4679-9621-e9b9afa0dc57",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "github-dashboard",
+        "options": {}
+      },
+      "id": "8c62e3bb-45cf-4f51-920b-a5d21ae16acf",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const k = $input.first().json;\nconst g = k.group.kpis, A = k.group.automation, L = [];\nL.push('Period: ' + k.window.from + ' to ' + k.window.to);\nL.push('Group: revenue AED ' + g.revenue + ' (' + g.revenue_change_pct + '% vs prior 30 days), orders and deals ' + g.orders + ', leads ' + g.leads + ', net cash AED ' + g.net_cash);\nObject.values(k.businesses).forEach((b) => {\n  const x = b.kpis;\n  L.push(b.name + ': revenue AED ' + x.revenue + ' (' + x.revenue_change_pct + '%), orders ' + x.orders + ', leads ' + x.leads + ', conversion ' + x.conversion_pct + '%, first reply ' + x.first_response_min + ' min, net cash AED ' + x.net_cash);\n});\nconst low = (k.businesses.store.low_stock || []).map((s) => s.product + ' (' + s.stock + ' left, reorder at ' + s.reorder_level + ')').join('; ');\nL.push('Low stock: ' + (low || 'none'));\nL.push('Automation: ' + A.hours_saved_30d + ' hours saved in 30 days, ' + A.agent_share_pct + '% of tickets resolved by the agent');\nreturn [{ json: { summary_input: L.join('\\n') } }];"
+      },
+      "id": "f310d455-b67e-4d8c-8eaf-97b92681277e",
+      "name": "Compress KPIs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.summary_input }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You write the Monday management briefing for a three-business group. Use ONLY the numbers provided. Never invent figures. Format: one headline sentence, then three short bullets (wins or risks, each backed by a number), then one recommended action for the week. Maximum 120 words. Plain text, no markdown headings."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "10c4c9c6-cc38-4d67-af50-813a4393cade",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "c60943c1-3c75-4217-8e24-9137f22bea91",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        96
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "hZHmoyc8OKzXDWW8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "slack-channel",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ '*Weekly management summary*\\n' + $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8158404a-4406-4866-abdc-be534b38a57d",
+      "name": "Slack update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        992,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1us1ytJo_heZnsIyY2vzrF8mZDQQoAQyrvq8YLW7ieBo",
+          "mode": "list",
+          "cachedResultName": "Automation OS Data",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1807957973,
+          "mode": "list",
+          "cachedResultName": "ledger",
+          "cachedResultUrl": "your-google-sheet"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow": "weekly-summary",
+            "business": "group",
+            "minutes_saved": "45",
+            "date": "={{ $now.format('yyyy-MM-dd') }}",
+            "timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflow",
+              "displayName": "workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business",
+              "displayName": "business",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "minutes_saved",
+              "displayName": "minutes_saved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "199131c5-769e-4d35-939a-600ec4ee727e",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1264,
+        -16
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ovurLvh2y3uauHqV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "nupurkhapali03@gmail.com",
+        "subject": "Weekly management summary",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "381119ad-e767-42b2-91a4-38ebdbe85faa",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1008,
+        64
+      ],
+      "webhookId": "0fb860c6-6a8c-4161-b91e-68a8b0cbc185",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "S1Wt7NgPpnRBcJWj",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Compress KPIs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compress KPIs": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Slack update",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack update": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "076dca74-bc22-4f92-aef3-e3e61e3f4d97",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81b4d1b9bbae33117cc3eb140f18c848d631315478d02e6c75be6ae2dced50ef"
+  },
+  "nodeGroups": [],
+  "id": "DLrOsOgGPJa0hmLe",
+  "tags": []
+}
