@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T11:36:05.371Z",
+  "generated_at": "2026-10-21T12:00:22.084Z",
   "ref_date": "2026-10-19",
   "window": {
     "from": "2026-09-20",
@@ -236,7 +236,7 @@
     "automation": {
       "hours_saved_30d": 98,
       "hours_saved_total": 141,
-      "runs_total": 1425,
+      "runs_total": 1426,
       "hours_by_workflow": [
         {
           "name": "lead-qualifier",
@@ -248,7 +248,7 @@
         },
         {
           "name": "support-agent",
-          "value": 11.4
+          "value": 11.5
         },
         {
           "name": "order-inventory-bot",
